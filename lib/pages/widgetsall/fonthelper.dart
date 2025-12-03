@@ -17,14 +17,27 @@ class Fonthelper {
     );
   }
 
-  static custombutton(String text, VoidCallback callback) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-      onPressed: callback,
-      child: Text(
-        "$text",
-        style: Fonthelper.mediumTextstyle(color: Colors.white),
+  static custombutton(String text, VoidCallback callback, {Color? color}) {
+    return Container(
+      width: 300,
+      height: 70,
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 5, vertical: 8),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color ?? Color(0xFF2F7A59),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 7,
+          shadowColor: Colors.black
+        ),
+        onPressed: callback,
+        child: Text(
+          "$text",
+          style: Fonthelper.mediumTextstyle(color: Colors.white),
+        ),
       ),
     );
   }
+  // static scrolling ()
 }

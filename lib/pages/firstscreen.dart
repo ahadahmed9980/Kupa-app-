@@ -1,37 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
-class Loginscreen extends StatelessWidget {
+class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
 
   @override
+  State<Loginscreen> createState() => _LoginscreenState();
+}
+
+class _LoginscreenState extends State<Loginscreen> {
+  final myitems = [
+    Image.asset("assets/images/bowl.png", fit: BoxFit.contain),
+    Image.asset("assets/images/bowl2.png", fit: BoxFit.contain),
+    Image.asset("assets/images/frontpic.png", fit: BoxFit.contain),
+  ];
+  int mycurrentindes = 0;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      //appbar
       appBar: AppBar(
-        title: Text(
-          "Kupa",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 35,
+              width: 30,
+              child: Image.asset("assets/images/bowl.png"),
+            ),
+            Text(
+              "Kupa",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        
         children: [
           Column(
             children: [
               Container(
-                height: 400,
-                width: 400,
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.05,
+                ),
+                height: MediaQuery.of(context).size.height * 0.35,
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(left: 0),
+                //image scroll
 
-                child: Image.asset("assets/images/main.png"),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CarouselSlider(
+                        items: myitems,
+                        options: CarouselOptions(
+                          height: MediaQuery.of(context).size.height * 0.30,
+                          autoPlay: true,
+
+                          autoPlayAnimationDuration: Duration(seconds: 2),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          viewportFraction: 0.8, // thoda space left/right me
+                          enlargeCenterPage: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Image.asset("assets/images/front.png"),
               ),
 
               Text("All your", style: Fonthelper.headLineTextsyle()),
               Text("favourites foods ", style: Fonthelper.headLineTextsyle()),
+
               Text(
                 "Order your favourite food with ",
                 style: Fonthelper.mediumTextstyle(color: Colors.grey),
@@ -40,23 +90,9 @@ class Loginscreen extends StatelessWidget {
                 " quick delivery ",
                 style: Fonthelper.mediumTextstyle(color: Colors.grey),
               ),
-              Container(
-                width: 300,
-                padding: EdgeInsetsGeometry.symmetric(
-                  horizontal: 25,
-                  vertical: 10,
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "Continue",
-                    style: Fonthelper.mediumTextstyle(color: Colors.white),
-                  ),
-                ),
-              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              Fonthelper.custombutton("Continue", () {}),
+              Fonthelper.custombutton("Sign in", () {}, color: Colors.grey),
             ],
           ),
         ],
