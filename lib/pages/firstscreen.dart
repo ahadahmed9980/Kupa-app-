@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:grocerapp/pages/login.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:grocerapp/pages/Signup.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -45,7 +47,7 @@ class _LoginscreenState extends State<Loginscreen> {
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        
+
         children: [
           Column(
             children: [
@@ -56,8 +58,8 @@ class _LoginscreenState extends State<Loginscreen> {
                 height: MediaQuery.of(context).size.height * 0.35,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.only(left: 0),
-                //image scroll
 
+                //image scroll
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -91,8 +93,18 @@ class _LoginscreenState extends State<Loginscreen> {
                 style: Fonthelper.mediumTextstyle(color: Colors.grey),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              Fonthelper.custombutton("Continue", () {}),
-              Fonthelper.custombutton("Sign in", () {}, color: Colors.grey),
+              Fonthelper.custombutton("Continue", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Signup()),
+                );
+              }),
+              Fonthelper.custombutton("Sign in", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              }, color: Colors.grey),
             ],
           ),
         ],
