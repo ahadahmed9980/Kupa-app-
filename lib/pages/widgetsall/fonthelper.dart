@@ -25,30 +25,50 @@ class Fonthelper {
     );
   }
 
-  static custombutton(String text, VoidCallback callback, {Color? color}) {
-    return Container(
-      width: 320,
-      height: 70,
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 1, vertical: 8),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? Color(0xFF2F7A59),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 7,
-          shadowColor: Colors.black,
+  static custombutton(
+  String text,
+  VoidCallback callback, {
+  Color? color,
+  Color? colors,
+  IconData? icons,
+}) {
+  return Container(
+    width: 320,
+    height: 70,
+    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color ?? Color(0xFF2F7A59),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: callback,
-        child: Text(
-          "$text",
-          style: Fonthelper.mediumTextstyle(color: Colors.white),
-        ),
+        elevation: 7,
+        shadowColor: Colors.black,
       ),
-    );
-  }
+      onPressed: callback,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+//Agar icon mila → icon dikhado Agar icon null ho → icon ko skip kardena
+          if (icons != null)... [
+            Icon(
+              icons,
+              color: colors ?? Colors.white, size: 20,
+            ),
+            SizedBox(width: 10),
+          ],
+          Text(
+            text,
+            style: Fonthelper.mediumTextstyle(
+              color: colors ?? Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
-  
 
   static customTextfield(
     TextEditingController controller,
@@ -100,16 +120,18 @@ class Fonthelper {
               borderSide: BorderSide(color: Colors.grey, width: 3),
             ),
             // suffixIcon: Icon(Icons.email, color: Colors.black, size: 25),
-            suffixIcon:  icondata != null
-              ? Icon(icondata, color: Colors.black)
-              : IconButton(
-                  onPressed: ontap,
-                  icon: Icon(
-                    tohide ? Icons.visibility_off  : Icons.visibility,
-                    color: Colors.black,
+            suffixIcon: icondata != null
+                ? Icon(icondata, color: Colors.black)
+                : IconButton(
+                    onPressed: ontap,
+                    icon: Icon(
+                      tohide ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.black,
+                    ),
+                  ),
           ),
         ),
       ),
-    )));
+    );
   }
 }

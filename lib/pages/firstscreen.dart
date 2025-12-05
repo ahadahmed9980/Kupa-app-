@@ -82,7 +82,7 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
 
               Text("All your", style: Fonthelper.headLineTextsyle()),
-              Text("favourites foods ", style: Fonthelper.headLineTextsyle()),
+              Text("favourite food ", style: Fonthelper.headLineTextsyle()),
 
               Text(
                 "Order your favourite food with ",
