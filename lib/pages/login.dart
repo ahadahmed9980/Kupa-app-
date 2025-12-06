@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
               Text(
                 "Forget Password?",
                 style: Fonthelper.mediumTextstyle(
-                  color: Color(0xFF2F7A59),
+                  color: const Color.fromARGB(255, 241, 1, 1),
                   font: FontWeight.w900,
                 ),
               ),
@@ -110,7 +110,11 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Fonthelper.custombutton("Login", () {
-                  signin(email.text.toString(), password.text.toString());
+                  // signin(email.text.toString(), password.text.toString());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
                 }),
               ),
               SizedBox(height: 10),
@@ -135,7 +139,7 @@ class _LoginState extends State<Login> {
                       " Sign Up ",
                       style: Fonthelper.mediumTextstyle(
                         font: FontWeight.w500,
-                        color: Color(0xFF2F7A59),
+                        color: const Color.fromARGB(255, 241, 1, 1),
                       ),
                     ),
                   ),

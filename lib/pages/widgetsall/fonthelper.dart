@@ -26,49 +26,43 @@ class Fonthelper {
   }
 
   static custombutton(
-  String text,
-  VoidCallback callback, {
-  Color? color,
-  Color? colors,
-  IconData? icons,
-}) {
-  return Container(
-    width: 320,
-    height: 70,
-    padding: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color ?? Color(0xFF2F7A59),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 7,
-        shadowColor: Colors.black,
-      ),
-      onPressed: callback,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-//Agar icon mila → icon dikhado Agar icon null ho → icon ko skip kardena
-          if (icons != null)... [
-            Icon(
-              icons,
-              color: colors ?? Colors.white, size: 20,
-            ),
-            SizedBox(width: 10),
-          ],
-          Text(
-            text,
-            style: Fonthelper.mediumTextstyle(
-              color: colors ?? Colors.white,
-            ),
+    String text,
+    VoidCallback callback, {
+    Color? color,
+    Color? colors,
+    IconData? icons,
+  }) {
+    return Container(
+      width: 320,
+      height: 70,
+      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color ?? const Color.fromARGB(255, 241, 1, 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ],
+          elevation: 7,
+          shadowColor: Colors.black,
+        ),
+        onPressed: callback,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Agar icon mila → icon dikhado Agar icon null ho → icon ko skip kardena
+            if (icons != null) ...[
+              Icon(icons, color: colors ?? Colors.white, size: 20),
+              SizedBox(width: 10),
+            ],
+            Text(
+              text,
+              style: Fonthelper.mediumTextstyle(color: colors ?? Colors.white),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   static customTextfield(
     TextEditingController controller,
@@ -132,6 +126,43 @@ class Fonthelper {
           ),
         ),
       ),
+    );
+  }
+
+  static SearchBar() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.only(left: 10),
+            margin: EdgeInsets.only(right: 10.0),
+            decoration: BoxDecoration(
+              color: Color(0xFFececf8),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: TextField(
+              cursorColor: Colors.black,
+              cursorWidth: 2,
+              cursorHeight: 20,
+
+              style: Fonthelper.mediumTextstyle(font: FontWeight.w700),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Search your fav food!...",
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 10.0),
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 241, 1, 1),
+            borderRadius: BorderRadius.circular(7),
+          ),
+          child: Icon(Icons.search, color: Colors.white),
+        ),
+      ],
     );
   }
 }

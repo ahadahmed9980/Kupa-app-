@@ -34,10 +34,9 @@ class _LoginscreenState extends State<Loginscreen> {
             ),
             Text(
               "Kupa",
-              style: TextStyle(
+              style: Fonthelper.headLineTextsyle(
+                fontsize: 30,
                 color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ],
