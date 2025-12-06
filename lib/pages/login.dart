@@ -1,7 +1,13 @@
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:grocerapp/pages/Signup.dart';
+import 'package:grocerapp/pages/home.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,8 +17,24 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Future<void> signin(String email, String password) async {
+    UserCredential userCredential;
+    if (email == "" || password == "") {
+      print("enter required fields");
+    }
+    try {
+      userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    } on FirebaseAuthException catch (ex) {
+      print(ex);
+    }
+  }
+
   TextEditingController email = TextEditingController();
-   TextEditingController password = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool hideEmail = true;
 
   @override
@@ -22,7 +44,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(backgroundColor: Colors.white),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 18,top: 10),
+          margin: EdgeInsets.only(left: 18, top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -87,7 +109,9 @@ class _LoginState extends State<Login> {
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
-                child: Fonthelper.custombutton("Login", () {}),
+                child: Fonthelper.custombutton("Login", () {
+                  signin(email.text.toString(), password.text.toString());
+                }),
               ),
               SizedBox(height: 10),
               //dont have an acc
@@ -98,7 +122,7 @@ class _LoginState extends State<Login> {
                     "Dont have an account?",
                     style: Fonthelper.mediumTextstyle(font: FontWeight.w500),
                   ),
-        
+
                   InkWell(
                     onTap: () {
                       Navigator.push(
@@ -106,7 +130,7 @@ class _LoginState extends State<Login> {
                         MaterialPageRoute(builder: (context) => Signup()),
                       );
                     },
-        
+
                     child: Text(
                       " Sign Up ",
                       style: Fonthelper.mediumTextstyle(
@@ -126,30 +150,29 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SizedBox(height: 15),
-            Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              child:   Fonthelper.custombutton(
-                "Sign in With google",
-                color: Color(0xFFFAFAFA),
-                colors: Colors.black,
-                icons: FontAwesomeIcons.google,
-                 () {},
+              Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Fonthelper.custombutton(
+                  "Sign in With google",
+                  color: Color(0xFFFAFAFA),
+                  colors: Colors.black,
+                  icons: FontAwesomeIcons.google,
+                  () {},
+                ),
               ),
-              
-            ),
-            SizedBox(height: 10,),
-             Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              child:   Fonthelper.custombutton(
-                "Sign in With apple",
-                color: Color(0xFFFAFAFA),
-                colors: Colors.black,
-                icons: FontAwesomeIcons.apple, () {},
+              SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Fonthelper.custombutton(
+                  "Sign in With apple",
+                  color: Color(0xFFFAFAFA),
+                  colors: Colors.black,
+                  icons: FontAwesomeIcons.apple,
+                  () {},
+                ),
               ),
-              
-            )
             ],
           ),
         ),
