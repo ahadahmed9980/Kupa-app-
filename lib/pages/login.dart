@@ -110,11 +110,11 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Fonthelper.custombutton("Login", () {
-                  // signin(email.text.toString(), password.text.toString());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  );
+                  signin(email.text.toString(), password.text.toString());
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => Home()),
+                  // );
                 }),
               ),
               SizedBox(height: 10),
