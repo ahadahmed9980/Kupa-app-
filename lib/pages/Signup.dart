@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocerapp/pages/home.dart';
 import 'package:grocerapp/pages/login.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
@@ -58,7 +59,7 @@ class _LoginState extends State<Signup> {
       appBar: AppBar(backgroundColor: Colors.white),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 18, top: 10),
+          margin: EdgeInsets.only(left: 18.w, top: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -70,7 +71,7 @@ class _LoginState extends State<Signup> {
                   font: FontWeight.w900,
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 30.h),
               //email
               Text(
                 "Name",
@@ -79,7 +80,7 @@ class _LoginState extends State<Signup> {
                   font: FontWeight.w900,
                 ),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.h),
               //email textfield
               Fonthelper.customTextfield(
                 name,
@@ -88,7 +89,7 @@ class _LoginState extends State<Signup> {
                 false,
                 () {},
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               //password
               Text(
                 "Email",
@@ -105,7 +106,7 @@ class _LoginState extends State<Signup> {
                 false,
                 () {},
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               //password
               Text(
                 "Password",
@@ -127,7 +128,7 @@ class _LoginState extends State<Signup> {
                 },
               ),
 
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //Register button
               Container(
                 width: double.infinity,
@@ -136,7 +137,7 @@ class _LoginState extends State<Signup> {
                   Signupuser();
                 }),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -171,7 +172,7 @@ class _LoginState extends State<Signup> {
                     Text(
                       "By clicking Register you,agree with our ",
                       style: Fonthelper.mediumTextstyle(
-                        fontsize: 15,
+                        fontsize: 15.sp,
                         color: Colors.black,
                       ),
                     ),

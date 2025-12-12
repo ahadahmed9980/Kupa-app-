@@ -1,13 +1,13 @@
-import 'dart:ffi';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:grocerapp/pages/Signup.dart';
 import 'package:grocerapp/pages/home.dart';
+import 'package:grocerapp/pages/widgetsall/addimage.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(backgroundColor: Colors.white),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 18, top: 10),
+          margin: EdgeInsets.only(left: 18.w, top: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                   font: FontWeight.w900,
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 30.h),
               //email
               Text(
                 "Email",
@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
                   font: FontWeight.w900,
                 ),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.h),
               //email textfield
               Fonthelper.customTextfield(
                 email,
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
                 false,
                 () {},
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               //password
               Text(
                 "Password",
@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                   });
                 },
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //forgetpassword
               Text(
                 "Forget Password?",
@@ -104,20 +104,20 @@ class _LoginState extends State<Login> {
                   font: FontWeight.w900,
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               //login button
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Fonthelper.custombutton("Login", () {
-                  signin(email.text.toString(), password.text.toString());
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => Home()),
-                  // );
+                  // signin(email.text.toString(), password.text.toString());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
                 }),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
               //dont have an acc
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -145,15 +145,15 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Text(
                 "_______________________Or with_____________________",
                 style: Fonthelper.mediumTextstyle(
                   color: Colors.grey,
-                  fontsize: 16,
+                  fontsize: 16.sp,
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
@@ -162,19 +162,26 @@ class _LoginState extends State<Login> {
                   color: Color(0xFFFAFAFA),
                   colors: Colors.black,
                   icons: FontAwesomeIcons.google,
-                  () {},
+                  () {
+                  
+                  },
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Container(
-                width: double.infinity,
+                width: double.infinity.w,
                 alignment: Alignment.center,
                 child: Fonthelper.custombutton(
                   "Sign in With apple",
                   color: Color(0xFFFAFAFA),
                   colors: Colors.black,
                   icons: FontAwesomeIcons.apple,
-                  () {},
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Threesteps()),
+                    );
+                  },
                 ),
               ),
             ],

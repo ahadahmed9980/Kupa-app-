@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Fonthelper {
   static TextStyle headLineTextsyle({
@@ -8,7 +9,7 @@ class Fonthelper {
   }) {
     return TextStyle(
       color: color ?? Colors.black,
-      fontSize: fontsize ?? 28,
+      fontSize: fontsize ?? 28.sp,
       fontWeight: fonts ?? FontWeight.w800,
     );
   }
@@ -20,7 +21,7 @@ class Fonthelper {
   }) {
     return TextStyle(
       color: color ?? Colors.black,
-      fontSize: fontsize ?? 18,
+      fontSize: fontsize ?? 18.sp,
       fontWeight: font ?? FontWeight.w600,
     );
   }
@@ -33,14 +34,14 @@ class Fonthelper {
     IconData? icons,
   }) {
     return Container(
-      width: 320,
-      height: 70,
-      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+      width: 320.w,
+      height: 70.h,
+      padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 8.h),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? const Color.fromARGB(255, 241, 1, 1),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           elevation: 7,
           shadowColor: Colors.black,
@@ -51,8 +52,8 @@ class Fonthelper {
           children: [
             //Agar icon mila → icon dikhado Agar icon null ho → icon ko skip kardena
             if (icons != null) ...[
-              Icon(icons, color: colors ?? Colors.white, size: 20),
-              SizedBox(width: 10),
+              Icon(icons, color: colors ?? Colors.white, size: 20.sp),
+              SizedBox(width: 10.w),
             ],
             Text(
               text,
@@ -70,14 +71,14 @@ class Fonthelper {
     IconData? icondata,
     // IconData icons,
     bool tohide,
-    VoidCallback ontap,
+    VoidCallback? ontap,
   ) {
     return Container(
-      width: 400,
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+      width: 400.w,
+      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 2.h),
 
       child: Material(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
         elevation: 2,
         shadowColor: Colors.black,
 
@@ -91,10 +92,10 @@ class Fonthelper {
           style: Fonthelper.mediumTextstyle(font: FontWeight.w800),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(
-              left: 10,
-              right: 1,
-              top: 15,
-              bottom: 20,
+              left: 10.w,
+              right: 1.w,
+              top: 15.h,
+              bottom: 20.h,
             ),
 
             filled: true,
@@ -102,16 +103,16 @@ class Fonthelper {
 
             hintText: "${text}",
             hintStyle: Fonthelper.mediumTextstyle(
-              fontsize: 16,
+              fontsize: 16.sp,
               color: Colors.grey,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey, width: 3),
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: Colors.grey, width: 3.w),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey, width: 3),
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: Colors.grey, width: 3.w),
             ),
             // suffixIcon: Icon(Icons.email, color: Colors.black, size: 25),
             suffixIcon: icondata != null
@@ -134,11 +135,11 @@ class Fonthelper {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.only(left: 10),
-            margin: EdgeInsets.only(right: 10.0),
+            padding: EdgeInsets.only(left: 10.w),
+            margin: EdgeInsets.only(right: 10.0.w),
             decoration: BoxDecoration(
               color: Color(0xFFececf8),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(15.r),
             ),
             child: TextField(
               cursorColor: Colors.black,
@@ -154,11 +155,11 @@ class Fonthelper {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(right: 10.0),
-          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(right: 10.0.w),
+          padding: EdgeInsets.all(8.0.r),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 241, 1, 1),
-            borderRadius: BorderRadius.circular(7),
+            borderRadius: BorderRadius.circular(7.r),
           ),
           child: Icon(Icons.search, color: Colors.white),
         ),
