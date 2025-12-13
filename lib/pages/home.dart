@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
                     }
                     return GridView.builder(
                       padding: EdgeInsets.zero,
-
+                
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.7,
