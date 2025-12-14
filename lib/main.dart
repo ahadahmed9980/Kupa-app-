@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocerapp/pages/firstscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grocerapp/pages/splasescreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           ),
-          home: const Loginscreen(),
+          home: const Splasescreen(),
         );
       },
     );

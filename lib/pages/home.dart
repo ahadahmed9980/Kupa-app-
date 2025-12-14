@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocerapp/pages/detailpage.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 
 import 'dart:typed_data';
@@ -16,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String track = "0";
+
   Uint8List? decodedBytes(String base64) {
     if (imageCache.containsKey(base64)) {
       return imageCache[base64];
@@ -36,9 +40,6 @@ class _HomeState extends State<Home> {
       .collection("Foodtile")
       .snapshots();
   final Map<String, Uint8List?> imageCache = {};
-  // final Productsecstream = FirebaseFirestore.instance
-  //     .collection("Home")
-  //     .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +130,7 @@ class _HomeState extends State<Home> {
                       final docId = doc.id;
                       final title = doc["title"] ?? "No Title";
                       final image = doc["image"] ?? "No Image";
-                      return CategoryTile(title, image, docId);
+                      return categoryTile(title, image, docId);
                     },
                   );
                 },
@@ -138,65 +139,63 @@ class _HomeState extends State<Home> {
             SizedBox(height: 20.0.h),
             //Stream builder Product section
             Expanded(
-              child: track == "0"
-                  ? Center(child: Text("NO product selected"))
-                  : StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("Foodtile")
-                          .doc(track)
-                          .collection("Products")
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (track == "0") {
-                          return Center(child: Text("No product selected"));
-                        }
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              "Stream builder section ${snapshot.error}",
-                            ),
-                          );
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: Color.fromARGB(255, 241, 1, 1),
-                            ),
-                          );
-                        }
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text("No data found"));
-                        }
-                        return GridView.builder(
-                          padding: EdgeInsets.zero,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("Foodtile")
+                    .doc(track)
+                    .collection("Products")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  // if (track == "0") {
+                  //   return Center(child: Text("No product selected"));
+                  // }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("Stream builder section ${snapshot.error}"),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF9F0F0F),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text("No data found"));
+                  }
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
 
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.85,
-                                mainAxisSpacing: 10.0,
-                                crossAxisSpacing: 20.0,
-                              ),
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, Index) {
-                            final doc = snapshot.data!.docs[Index];
-                            // final docId = doc.id;
-                            final title = doc["title"] ?? "No title";
-                            final image = doc["image"] ?? "No image";
-                            final price = doc["price"] ?? "No price";
-                            final discountprice =
-                                doc["discount"] ?? " No price";
-                            return ProductSec(
-                              title,
-                              price,
-                              discountprice,
-                              image,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.85,
+                          mainAxisSpacing: 13.0,
+                          crossAxisSpacing: 0.0,
+                        ),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, Index) {
+                      final doc = snapshot.data!.docs[Index];
+                      final categoryId = track;
+                      final productId = doc.id;
+
+                      final title = doc["title"] ?? "No title";
+                      final image = doc["image"] ?? "No image";
+                      final price = doc["price"] ?? "No price";
+                      final discountprice = doc["discount"] ?? " No price";
+                      return productSec(
+                        title,
+                        price,
+                        discountprice,
+                        image,
+                        productId,
+                        categoryId,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -205,7 +204,7 @@ class _HomeState extends State<Home> {
   }
 
   //food tile section
-  Widget CategoryTile(String name, String image, String categoryId) {
+  Widget categoryTile(String name, String image, String categoryId) {
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -225,7 +224,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
 
-                color: Color.fromARGB(255, 241, 1, 1),
+                 color: Color(0xFF9F0F0F),
               ),
               child: Row(
                 children: [
@@ -275,40 +274,108 @@ class _HomeState extends State<Home> {
   }
 
   // Product Section
-  Widget ProductSec(String name, String price, String dic_price, image) {
-    return Container(
-      // padding: EdgeInsets.only(left: 10.w, top: 10.h),
-      margin: EdgeInsets.only(right: 15),
-      decoration: BoxDecoration(
-        color: Color(0xFFececf8),
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.zero,
-          topRight: Radius.zero,
-          bottomLeft: Radius.circular(15.0.r),
-          bottomRight: Radius.circular(15.0.r),
+  Widget productSec(
+    String name,
+    String price,
+    String dic_price,
+    String image,
+    String productId,
+    String documentId,
+  ) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                Detailpage(documentId: documentId, productId: productId),
+          ),
+        );
+
+        print(documentId);
+        print(productId);
+      },
+      child: Container(
+        // padding: EdgeInsets.only(left: 10.w, top: 10.h),
+        margin: EdgeInsets.only(right: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.zero,
+            topRight: Radius.zero,
+            bottomLeft: Radius.circular(13.0.r),
+            bottomRight: Radius.circular(13.0.r),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3), // Rang
+              blurRadius: 10,
+              offset: Offset(0, 5),
+              spreadRadius: 0.7,
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3), // Rang
-            blurRadius: 20, 
-            offset: Offset(0, 10), 
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Center(
-            child: decodedBytes(image) != null
-                ? Image.memory(
-                    decodedBytes(image)!,
-                    height: 140.h,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : Icon(Icons.error, color: Colors.white),
-          ),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: decodedBytes(image) != null
+                  ? Image.memory(
+                      decodedBytes(image)!,
+                      height: 140.h,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : Icon(Icons.error, color: Colors.white),
+            ),
+            Container(
+              padding: EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: Fonthelper.mediumTextstyle(fontsize: 20.sp),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  SizedBox(height: 2.h),
+                  Row(
+                    children: [
+                      Text(
+                        'Rs. $price',
+                        style: Fonthelper.mediumTextstyle(
+                          fontsize: 18.sp,
+                            color: Color(0xFF9F0F0F),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'RS. $dic_price',
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FaIcon(
+                        Icons.favorite,
+                        color: Colors.blueGrey, // blue-grey if false
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

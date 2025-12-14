@@ -39,7 +39,7 @@ class Fonthelper {
       padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 8.h),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? const Color.fromARGB(255, 241, 1, 1),
+          backgroundColor: color ?? const Color(0xFF9F0F0F),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.r),
           ),
@@ -158,7 +158,7 @@ class Fonthelper {
           margin: EdgeInsets.only(right: 10.0.w),
           padding: EdgeInsets.all(8.0.r),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 241, 1, 1),
+            color: Color(0xFF9F0F0F),
             borderRadius: BorderRadius.circular(7.r),
           ),
           child: Icon(Icons.search, color: Colors.white),
@@ -167,5 +167,3 @@ class Fonthelper {
     );
   }
 }
-
-  

@@ -157,7 +157,7 @@ class _LoginState extends State<Signup> {
                       " Login",
                       style: Fonthelper.mediumTextstyle(
                         font: FontWeight.w500,
-                        color: const Color.fromARGB(255, 241, 1, 1),
+                          color: Color(0xFF9F0F0F),
                       ),
                     ),
                   ),
@@ -179,7 +179,7 @@ class _LoginState extends State<Signup> {
                     Text(
                       "Terms Privacy & Policy",
                       style: Fonthelper.mediumTextstyle(
-                        color: const Color.fromARGB(255, 241, 1, 1),
+                         color: Color(0xFF9F0F0F),
                       ),
                     ),
                   ],
