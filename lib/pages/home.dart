@@ -17,14 +17,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String track = "0";
   Uint8List? decodedBytes(String base64) {
-    if (base64 == null) return null;
     if (imageCache.containsKey(base64)) {
       return imageCache[base64];
     }
     try {
       final bytes = base64Decode(base64);
       imageCache[base64] = bytes;
-      return base64Decode(base64);
+      return bytes;
     } catch (e) {
       imageCache[base64] = null;
       print("Base64 decode error: $e");
@@ -37,9 +36,9 @@ class _HomeState extends State<Home> {
       .collection("Foodtile")
       .snapshots();
   final Map<String, Uint8List?> imageCache = {};
-  final Productsecstream = FirebaseFirestore.instance
-      .collection("Home")
-      .snapshots();
+  // final Productsecstream = FirebaseFirestore.instance
+  //     .collection("Home")
+  //     .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +111,14 @@ class _HomeState extends State<Home> {
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Center(child: Text("No data found"));
                   }
+                  if (track == "0") {
+                    final firstdocId = snapshot.data!.docs[0].id;
+                    Future.microtask(() {
+                      setState(() {
+                        track = firstdocId;
+                      });
+                    });
+                  }
 
                   // ListView.builder for categories
                   return ListView.builder(
@@ -119,9 +126,10 @@ class _HomeState extends State<Home> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final doc = snapshot.data!.docs[index];
+                      final docId = doc.id;
                       final title = doc["title"] ?? "No Title";
                       final image = doc["image"] ?? "No Image";
-                      return CategoryTile(title, image, index.toString());
+                      return CategoryTile(title, image, docId);
                     },
                   );
                 },
@@ -130,48 +138,65 @@ class _HomeState extends State<Home> {
             SizedBox(height: 20.0.h),
             //Stream builder Product section
             Expanded(
-              child: Container(
-                margin: EdgeInsets.only(right: 15.0.w),
-                child: StreamBuilder(
-                  stream: Productsecstream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text("Stream builder section ${snapshot.error}"),
-                      );
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: Color.fromARGB(255, 241, 1, 1),
-                        ),
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(child: Text("No data found"));
-                    }
-                    return GridView.builder(
-                      padding: EdgeInsets.zero,
-                
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.7,
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 20.0,
-                      ),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, Index) {
-                        final doc = snapshot.data!.docs[Index];
-                        final title = doc["title"] ?? "No title";
-                        final image = doc["image"] ?? "No image";
-                        final price = doc["Price"] ?? "No price";
-                        final discountprice = doc["DisPrice"] ?? " No price";
-                        return ProductSec(title, image, price, discountprice);
+              child: track == "0"
+                  ? Center(child: Text("NO product selected"))
+                  : StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection("Foodtile")
+                          .doc(track)
+                          .collection("Products")
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (track == "0") {
+                          return Center(child: Text("No product selected"));
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Stream builder section ${snapshot.error}",
+                            ),
+                          );
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: Color.fromARGB(255, 241, 1, 1),
+                            ),
+                          );
+                        }
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return Center(child: Text("No data found"));
+                        }
+                        return GridView.builder(
+                          padding: EdgeInsets.zero,
+
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.85,
+                                mainAxisSpacing: 10.0,
+                                crossAxisSpacing: 20.0,
+                              ),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, Index) {
+                            final doc = snapshot.data!.docs[Index];
+                            // final docId = doc.id;
+                            final title = doc["title"] ?? "No title";
+                            final image = doc["image"] ?? "No image";
+                            final price = doc["price"] ?? "No price";
+                            final discountprice =
+                                doc["discount"] ?? " No price";
+                            return ProductSec(
+                              title,
+                              price,
+                              discountprice,
+                              image,
+                            );
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-              ),
+                    ),
             ),
           ],
         ),
@@ -180,14 +205,19 @@ class _HomeState extends State<Home> {
   }
 
   //food tile section
-  Widget CategoryTile(String name, String image, String catergoryindex) {
+  Widget CategoryTile(String name, String image, String categoryId) {
     return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onTap: () {
         //on tap par track ki value update ho rahi hum nay just setstate update karwanay kay liye track == catergoryindex is ka use kia because ho he nahi sakta yeah alse ho because cindex ki value he track may ja rahi hy
-        track = catergoryindex.toString();
-        setState(() {});
+
+        setState(() {
+          track = categoryId;
+          print("Selected track: $categoryId");
+        });
       },
-      child: track == catergoryindex
+      child: track == categoryId
           ? Container(
               margin: EdgeInsets.only(right: 10.w),
               padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -245,12 +275,26 @@ class _HomeState extends State<Home> {
   }
 
   // Product Section
-  Widget ProductSec(String name, String image, String price, String dic_price) {
+  Widget ProductSec(String name, String price, String dic_price, image) {
     return Container(
-      padding: EdgeInsets.only(left: 10.w, top: 10.h),
+      // padding: EdgeInsets.only(left: 10.w, top: 10.h),
+      margin: EdgeInsets.only(right: 15),
       decoration: BoxDecoration(
+        color: Color(0xFFececf8),
         border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.zero,
+          topRight: Radius.zero,
+          bottomLeft: Radius.circular(15.0.r),
+          bottomRight: Radius.circular(15.0.r),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3), // Rang
+            blurRadius: 20, 
+            offset: Offset(0, 10), 
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -258,23 +302,11 @@ class _HomeState extends State<Home> {
             child: decodedBytes(image) != null
                 ? Image.memory(
                     decodedBytes(image)!,
-                    height: 100.h,
-                    width: 100.h,
+                    height: 140.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   )
                 : Icon(Icons.error, color: Colors.white),
-          ),
-          Text(
-            "$name",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Fonthelper.mediumTextstyle(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("$price", style: Fonthelper.headLineTextsyle()),
-              SizedBox(width: 30.w),
-            ],
           ),
         ],
       ),

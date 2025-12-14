@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:grocerapp/pages/widgetsall/addsubcollection.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,8 +15,9 @@ class Threesteps extends StatefulWidget {
 }
 
 class _ThreestepsState extends State<Threesteps> {
-  TextEditingController collection = TextEditingController();
+
   TextEditingController document = TextEditingController();
+  TextEditingController title = TextEditingController();
 
   Future<void> saveBase64() async {
     final picker = ImagePicker();
@@ -45,12 +47,16 @@ class _ThreestepsState extends State<Threesteps> {
     try {
       print("storing in to db....");
       await FirebaseFirestore.instance
-          .collection(collection.text.toString())
-          .doc(document.text.toString())
-          .update({
-            "image": base64str,
-            "size_kb": sizekb.toStringAsFixed(2),
-          });
+          .collection("Foodtile")
+          .doc(document.text)
+          .set(
+            {
+              "image": base64str,
+              "size_kb": sizekb.toStringAsFixed(2),
+              "title": title.text,
+            },
+            SetOptions(merge: true),
+          ); // is say agar document exist na karta ho to new create ho jye ga agar exist karta hy to update ho jye ga
     } catch (ex) {
       print("the error is $ex");
     }
@@ -61,25 +67,37 @@ class _ThreestepsState extends State<Threesteps> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-         Fonthelper.customTextfield(collection,
-                "Enter Collection",
-                Icons.email,
-                false,
-                () {},),
-          SizedBox(height: 20),
-          Fonthelper.customTextfield(document, "document", Icons.add_ic_call_outlined, false, (){}),
-          
-          SizedBox(height: 20),
-         Fonthelper.custombutton("Upload", (){
-          saveBase64();
-         })
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+        
+          children: [
+        
+            SizedBox(height: 20),
+            Fonthelper.customTextfield(
+              document,
+              "document",
+              Icons.add_ic_call_outlined,
+              false,
+              () {},
+            ),
+            SizedBox(height: 20),
+            Fonthelper.customTextfield(title, "Title", null, false, null),
+        
+            SizedBox(height: 20),
+            Fonthelper.custombutton("Upload", () {
+              saveBase64();
+            }),
+        
+            Fonthelper.custombutton("Collection ", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Addsubcollection()),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
-  
 }
