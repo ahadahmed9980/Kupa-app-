@@ -366,8 +366,8 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       FaIcon(
-                        Icons.favorite,
-                        color: Colors.blueGrey, // blue-grey if false
+                        Icons.favorite_border_rounded,
+                        color: Colors.blueGrey,fontWeight: FontWeight.w500, // blue-grey if false
                       ),
                     ],
                   ),

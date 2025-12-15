@@ -166,4 +166,62 @@ class Fonthelper {
       ],
     );
   }
+
+  //custom small button
+  static customsmallbutton(
+    String text,
+    VoidCallback callback,
+    Color? color,
+    Color? colors,
+  ) {
+    return Container(
+      width: 120.w,
+      height: 65.h,
+      padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 9.h),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(overlayColor: Colors.transparent,
+          backgroundColor: color ?? const Color(0xFF9F0F0F),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
+          ),
+          elevation: 7,
+
+          shadowColor: Colors.black,
+        ),
+        onPressed: callback,
+        child: Text(
+          '$text',
+          style: Fonthelper.mediumTextstyle(color: colors ?? Colors.white),
+        ),
+      ),
+    );
+  }
+  static customsmallbutton2(
+      String text,
+      VoidCallback callback,
+      Color? color,
+      Color? colors,
+      ) {
+    return Container(
+      height: 75.h,
+      width: 180.w,
+      padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 9.h),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(overlayColor: Colors.transparent,
+          backgroundColor: color ?? const Color(0xFF9F0F0F),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
+          ),
+          elevation: 7,
+
+          shadowColor: Colors.black,
+        ),
+        onPressed: callback,
+        child: Text(
+          '$text',
+          style: Fonthelper.mediumTextstyle(color: colors ?? Colors.white),
+        ),
+      ),
+    );
+  }
 }

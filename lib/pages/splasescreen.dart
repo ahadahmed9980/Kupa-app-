@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grocerapp/pages/Signup.dart';
 import 'package:grocerapp/pages/firstscreen.dart';
 
 class Splasescreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SplasescreenState extends State<Splasescreen> {
     Timer(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Loginscreen()),
+        MaterialPageRoute(builder: (context) => Signup()),
       );
     });
   }
