@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocerapp/pages/detailpage.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'dart:typed_data';
 
@@ -102,6 +103,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
               ),
+//<QuerySnapshot> or <DocumentSnapshot> is ka difference 
               child: StreamBuilder<QuerySnapshot>(
                 stream: categoryStream,
                 builder: (context, snapshot) {
@@ -224,7 +226,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
 
-                 color: Color(0xFF9F0F0F),
+                color: Color(0xFF9F0F0F),
               ),
               child: Row(
                 children: [
@@ -348,7 +350,7 @@ class _HomeState extends State<Home> {
                         'Rs. $price',
                         style: Fonthelper.mediumTextstyle(
                           fontsize: 18.sp,
-                            color: Color(0xFF9F0F0F),
+                          color: Color(0xFF9F0F0F),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -367,7 +369,8 @@ class _HomeState extends State<Home> {
                     children: [
                       FaIcon(
                         Icons.favorite_border_rounded,
-                        color: Colors.blueGrey,fontWeight: FontWeight.w500, // blue-grey if false
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.w500, // blue-grey if false
                       ),
                     ],
                   ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grocerapp/pages/firstscreen.dart';
+import 'package:grocerapp/pages/firstscreen.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocerapp/pages/splasescreen.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
