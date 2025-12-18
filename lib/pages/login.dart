@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
         email: email,
         password: password,
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (ex) {
       print(ex);
     }
@@ -110,11 +110,11 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Fonthelper.custombutton("Login", () {
-                  // signin(email.text.toString(), password.text.toString());
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  );
+                  signin(email.text.toString(), password.text.toString());
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => Home()),
+                  // );
                 }),
               ),
               SizedBox(height: 10.h),

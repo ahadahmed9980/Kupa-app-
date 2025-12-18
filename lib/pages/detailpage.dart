@@ -1,10 +1,10 @@
-import 'dart:nativewrappers/_internal/vm/lib/async_patch.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocerapp/pages/cart.dart';
 import 'package:grocerapp/pages/detailpage.dart';
 import 'package:grocerapp/pages/home.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
@@ -44,8 +44,11 @@ class _DetailpageState extends State<Detailpage> {
   }
 
   final Map<String, Uint8List?> imageCache = {};
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   int quantity = 1;
+  int price = 0;
+  bool isPriceInitialized = true;
 
   @override
   Widget build(BuildContext context) {
@@ -63,93 +66,25 @@ class _DetailpageState extends State<Detailpage> {
           if (snapshot.hasError) {
             return Center(child: Text('Error ${snapshot.error}'));
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // return Skeletonizer(
-            //   enabled: true,
-            //   child: SingleChildScrollView(
-            //     child: Container(
-            //       margin: EdgeInsets.only(left: 15.w, top: 50.h, right: 15.w),
-            //       child: Column(
-            //         children: [
-            //           Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             children: [
-            //               Container(
-            //                 width: 30.w,
-            //                 height: 30.h,
-            //                 color: Colors.grey[300],
-            //               ),
-            //               Container(
-            //                 width: 120.w,
-            //                 height: 25.h,
-            //                 color: Colors.grey[300],
-            //               ),
-            //               Container(
-            //                 width: 30.w,
-            //                 height: 30.h,
-            //                 color: Colors.grey[300],
-            //               ),
-            //             ],
-            //           ),
-            //           SizedBox(height: 10.h),
+          if (snapshot.connectionState == ConnectionState.waiting) {}
 
-            //           Container(
-            //             margin: EdgeInsets.only(
-            //               left: 4.w,
-            //               right: 4.w,
-            //               top: 10.h,
-            //             ),
-            //             height: 400.h,
-            //             width: double.infinity,
-            //             decoration: BoxDecoration(
-            //               color: Colors.grey[300],
-            //               borderRadius: BorderRadius.circular(15),
-            //             ),
-            //           ),
-            //           SizedBox(height: 10.h),
-
-            //           Container(
-            //             height: 100.h,
-            //             width: double.infinity,
-            //             color: Colors.grey[300],
-            //           ),
-            //           SizedBox(height: 10.h),
-
-            //           // Description Skeleton
-            //           Container(
-            //             height: 100.h,
-            //             width: double.infinity,
-            //             decoration: BoxDecoration(
-            //               color: Colors.grey[300],
-            //               borderRadius: BorderRadius.circular(12.r),
-            //             ),
-            //           ),
-            //           SizedBox(height: 20.h),
-
-            //           // Quantity and Button Skeleton
-            //           Container(
-            //             height: 60.h,
-            //             width: double.infinity,
-            //             color: Colors.grey[300],
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // );
-          }
           if (!snapshot.hasData || !snapshot.data!.exists) {
             return Center(child: Text("No data found"));
           }
           final docdata = snapshot.data!.data() as Map<String, dynamic>;
           final title = docdata["title"] ?? "No title";
           final image = docdata["image"] ?? "No image";
-          final price = docdata["price"] ?? "No Price";
+          final prices = int.parse(docdata["price"]);
+          if (!isPriceInitialized) {
+            price = prices;
+            isPriceInitialized = false;
+          }
           final discount = docdata["discount"] ?? "No discount";
           final description = docdata["description"] ?? "No description";
           final things = docdata["things"] ?? "";
+
           return productdetail(
-            price,
+            prices,
             discount,
             title,
             image,
@@ -163,7 +98,7 @@ class _DetailpageState extends State<Detailpage> {
   //widget of
 
   Widget productdetail(
-    String priceof,
+    int priceof,
     String discountof,
     String nameof,
     String image,
@@ -180,7 +115,7 @@ class _DetailpageState extends State<Detailpage> {
                 border: Border(
                   bottom: BorderSide(
                     color: const Color.fromARGB(255, 233, 232, 232),
-                    width: 01,
+                    width: 01.w,
                   ),
                 ),
               ),
@@ -198,9 +133,18 @@ class _DetailpageState extends State<Detailpage> {
                   ),
                   Text(
                     "Food Details",
-                    style: Fonthelper.mediumTextstyle(fontsize: 23),
+                    style: Fonthelper.mediumTextstyle(fontsize: 23.sp),
                   ),
-                  FaIcon(Icons.shopping_cart_outlined, color: Colors.black),
+                  InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Cart()),
+                    ),
+                    child: FaIcon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -223,7 +167,7 @@ class _DetailpageState extends State<Detailpage> {
                     : SizedBox(),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
 
             Container(
               margin: EdgeInsets.only(left: 4.w, right: 4.w),
@@ -235,7 +179,7 @@ class _DetailpageState extends State<Detailpage> {
                       Text(
                         '$nameof',
                         style: Fonthelper.mediumTextstyle(
-                          fontsize: 22,
+                          fontsize: 22.sp,
                           font: FontWeight.w600,
                         ),
                       ),
@@ -297,14 +241,14 @@ class _DetailpageState extends State<Detailpage> {
                       Text(
                         "(203 Ratings)",
                         style: Fonthelper.mediumTextstyle(
-                          fontsize: 17,
+                          fontsize: 17.sp,
                           color: Colors.grey,
                         ),
                       ),
                       SizedBox(width: 7.w),
                       Text(
                         "$things0f",
-                        style: Fonthelper.mediumTextstyle(fontsize: 17),
+                        style: Fonthelper.mediumTextstyle(fontsize: 17.sp),
                       ),
                     ],
                   ),
@@ -319,7 +263,7 @@ class _DetailpageState extends State<Detailpage> {
                       ),
                       SizedBox(width: 10.w),
                       Fonthelper.customsmallbutton(
-                        "Reviews",
+                        'Rs. $price',
                         () {},
                         Colors.white,
                         Colors.black,
@@ -346,11 +290,11 @@ class _DetailpageState extends State<Detailpage> {
                       ),
                       child: Text(
                         '$detailof',
-                        style: Fonthelper.mediumTextstyle(fontsize: 15),
+                        style: Fonthelper.mediumTextstyle(fontsize: 15.sp),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //main box row
@@ -379,6 +323,7 @@ class _DetailpageState extends State<Detailpage> {
                                     if (quantity > 15) {
                                       quantity--;
                                     }
+                                    price = quantity * priceof;
                                   });
                                 },
                                 child: Container(
@@ -390,11 +335,12 @@ class _DetailpageState extends State<Detailpage> {
                                   child: FaIcon(Icons.add, color: Colors.white),
                                 ),
                               ),
+
                               Container(
                                 child: Text(
                                   '$quantity',
                                   style: Fonthelper.mediumTextstyle(
-                                    fontsize: 25,
+                                    fontsize: 25.sp,
                                   ),
                                 ),
                               ),
@@ -404,6 +350,8 @@ class _DetailpageState extends State<Detailpage> {
                                     if (quantity > 1) {
                                       quantity--;
                                     }
+                                    price = quantity * priceof;
+                                    print(price);
                                   });
                                 },
                                 child: Container(
@@ -415,7 +363,7 @@ class _DetailpageState extends State<Detailpage> {
                                   ),
                                   child: Icon(
                                     Icons.remove,
-                                    weight: 10,
+                                    weight: 10.w,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -426,8 +374,27 @@ class _DetailpageState extends State<Detailpage> {
                       ),
                       SizedBox(width: 20.w),
                       Fonthelper.customsmallbutton2(
-                        "Order Now",
-                        () {},
+                        "Add to cart",
+                        () {
+                          print(uid);
+                          Fonthelper.delightsnackbar(
+                            "Add to cart ",
+                            Icons.notifications_active,
+                            Colors.red,
+                          ).show(context);
+                          FirebaseFirestore.instance
+                              .collection("User")
+                              .doc(uid)
+                              .collection("Cart")
+                              .add({
+                                "title": nameof,
+                                "image": image,
+                                "price": priceof,
+                                "quantity": quantity,
+                                "productid": widget.productId,
+                                "totalprice": price,
+                              });
+                        },
                         null,
                         null,
                       ),

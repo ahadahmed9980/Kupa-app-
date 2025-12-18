@@ -77,7 +77,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     ],
                   ),
                 ),
-                // Image.asset("assets/images/front.png"),
+                // Image.asset("assets/images/front.png")
               ),
 
               Text("All your", style: Fonthelper.headLineTextsyle()),

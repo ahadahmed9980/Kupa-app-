@@ -369,8 +369,8 @@ class _HomeState extends State<Home> {
                     children: [
                       FaIcon(
                         Icons.favorite_border_rounded,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w500, // blue-grey if false
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500, 
                       ),
                     ],
                   ),

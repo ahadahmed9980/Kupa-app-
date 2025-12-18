@@ -49,6 +49,7 @@ dependencies:
   skeletonizer: ^2.1.2
   flutter_stripe: ^12.1.1
   http: ^1.6.0
+  delightful_toast: ^1.1.0
   
   
 

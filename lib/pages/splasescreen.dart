@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocerapp/pages/Signup.dart';
 import 'package:grocerapp/pages/firstscreen.dart';
+import 'package:grocerapp/pages/widgetsall/checkuser.dart';
 
 class Splasescreen extends StatefulWidget {
   const Splasescreen({super.key});
@@ -16,10 +17,10 @@ class _SplasescreenState extends State<Splasescreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4), () {
+    Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Signup()),
+        MaterialPageRoute(builder: (context) => Checkuser()),
       );
     });
   }

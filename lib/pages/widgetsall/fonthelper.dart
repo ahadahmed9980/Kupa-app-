@@ -1,5 +1,9 @@
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
+import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Fonthelper {
   static TextStyle headLineTextsyle({
@@ -175,11 +179,11 @@ class Fonthelper {
     Color? colors,
   ) {
     return Container(
-      width: 120.w,
       height: 65.h,
       padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 9.h),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(overlayColor: Colors.transparent,
+        style: ElevatedButton.styleFrom(
+          overlayColor: Colors.transparent,
           backgroundColor: color ?? const Color(0xFF9F0F0F),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.r),
@@ -196,18 +200,20 @@ class Fonthelper {
       ),
     );
   }
+
   static customsmallbutton2(
-      String text,
-      VoidCallback callback,
-      Color? color,
-      Color? colors,
-      ) {
+    String text,
+    VoidCallback callback,
+    Color? color,
+    Color? colors,
+  ) {
     return Container(
       height: 75.h,
       width: 180.w,
       padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 9.h),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(overlayColor: Colors.transparent,
+        style: ElevatedButton.styleFrom(
+          overlayColor: Colors.transparent,
           backgroundColor: color ?? const Color(0xFF9F0F0F),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.r),
@@ -221,6 +227,70 @@ class Fonthelper {
           '$text',
           style: Fonthelper.mediumTextstyle(color: colors ?? Colors.white),
         ),
+      ),
+    );
+  }
+
+  static delightsnackbar(String text, IconData? icons, Color? color) {
+    return DelightToastBar(
+      builder: (context) {
+        return ToastCard(
+          leading: FaIcon(icons, size: 30, color: const Color(0xFF9F0F0F)),
+          title: Text(
+            "$text",
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w800,
+              color: color,
+            ),
+          ),
+        );
+      },
+      position: DelightSnackbarPosition.bottom,
+      autoDismiss: true,
+
+      snackbarDuration: Duration(seconds: 3),
+    );
+  }
+
+
+
+
+  static billbars(String text, String bill) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.r),
+        //  border: Border.all(color: Colors.black,width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(5, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: Fonthelper.mediumTextstyle(
+              fontsize: 17.sp,
+              color:Colors.grey
+            ),
+          ),
+          Text(
+            "Rs. $bill",
+            style: Fonthelper.mediumTextstyle(
+              color: const Color(0xFF9F0F0F),
+              fontsize: 19.sp,
+            ),
+          ),
+        ],
       ),
     );
   }

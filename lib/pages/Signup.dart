@@ -5,7 +5,7 @@ import 'package:grocerapp/pages/login.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signup extends StatefulWidget {
