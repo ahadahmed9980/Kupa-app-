@@ -9,6 +9,7 @@ import 'package:grocerapp/pages/detailpage.dart';
 import 'package:grocerapp/pages/home.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 
+
 import 'dart:typed_data';
 
 import 'dart:convert';
@@ -18,10 +19,13 @@ import 'package:skeletonizer/skeletonizer.dart';
 class Detailpage extends StatefulWidget {
   final String documentId;
   final String productId;
+  final String price;
+
   const Detailpage({
     super.key,
     required this.documentId,
     required this.productId,
+    required this.price,
   });
 
   @override
@@ -47,8 +51,12 @@ class _DetailpageState extends State<Detailpage> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   int quantity = 1;
-  int price = 0;
-  bool isPriceInitialized = true;
+  late int totalprice;
+  @override
+  void initState() {
+    super.initState();
+    totalprice = int.parse(widget.price);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,16 +80,14 @@ class _DetailpageState extends State<Detailpage> {
             return Center(child: Text("No data found"));
           }
           final docdata = snapshot.data!.data() as Map<String, dynamic>;
-          final title = docdata["title"] ?? "No title";
-          final image = docdata["image"] ?? "No image";
-          final prices = int.parse(docdata["price"]);
-          if (!isPriceInitialized) {
-            price = prices;
-            isPriceInitialized = false;
-          }
-          final discount = docdata["discount"] ?? "No discount";
-          final description = docdata["description"] ?? "No description";
-          final things = docdata["things"] ?? "";
+          final title = docdata["title"]?.toString() ?? "No title";
+          final image = docdata["image"]?.toString() ?? "No image";
+          final prices = docdata["price"] ?? 0;
+
+          final discount = docdata["discount"]?.toString() ?? "No discount";
+          final description =
+              docdata["description"]?.toString() ?? "No description";
+          final things = docdata["things"]?.toString() ?? "";
 
           return productdetail(
             prices,
@@ -98,15 +104,14 @@ class _DetailpageState extends State<Detailpage> {
   //widget of
 
   Widget productdetail(
-    int priceof,
+    dynamic priceof,
     String discountof,
     String nameof,
     String image,
     String detailof,
     String things0f,
   ) {
-    return SingleChildScrollView(
-      child: Container(
+    return  Container(
         margin: EdgeInsets.only(left: 15.w, top: 50.h, right: 15.w),
         child: Column(
           children: [
@@ -196,7 +201,7 @@ class _DetailpageState extends State<Detailpage> {
                       Row(
                         children: [
                           Text(
-                            '$priceof',
+                            priceof,
                             style: Fonthelper.mediumTextstyle(
                               fontsize: 29.sp,
                               color: Color(0xFF9F0F0F),
@@ -215,7 +220,6 @@ class _DetailpageState extends State<Detailpage> {
                         ],
                       ),
 
-                      // RIGHT SIDE (Title)
                       Text(
                         "${widget.documentId}",
                         style: Fonthelper.mediumTextstyle(
@@ -263,7 +267,7 @@ class _DetailpageState extends State<Detailpage> {
                       ),
                       SizedBox(width: 10.w),
                       Fonthelper.customsmallbutton(
-                        'Rs. $price',
+                        'Rs. ${totalprice}',
                         () {},
                         Colors.white,
                         Colors.black,
@@ -323,7 +327,9 @@ class _DetailpageState extends State<Detailpage> {
                                     if (quantity > 15) {
                                       quantity--;
                                     }
-                                    price = quantity * priceof;
+                                    totalprice =
+                                        quantity *
+                                        int.parse(priceof.toString());
                                   });
                                 },
                                 child: Container(
@@ -350,8 +356,10 @@ class _DetailpageState extends State<Detailpage> {
                                     if (quantity > 1) {
                                       quantity--;
                                     }
-                                    price = quantity * priceof;
-                                    print(price);
+                                    totalprice =
+                                        quantity *
+                                        int.parse(priceof.toString());
+                                    print(totalprice);
                                   });
                                 },
                                 child: Container(
@@ -392,7 +400,7 @@ class _DetailpageState extends State<Detailpage> {
                                 "price": priceof,
                                 "quantity": quantity,
                                 "productid": widget.productId,
-                                "totalprice": price,
+                                "totalprice": totalprice,
                               });
                         },
                         null,
@@ -405,7 +413,7 @@ class _DetailpageState extends State<Detailpage> {
             ),
           ],
         ),
-      ),
-    );
+      );
+  
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocerapp/pages/detailpage.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 
 import 'dart:typed_data';
 
@@ -20,7 +22,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String track = "0";
-
+final uid = FirebaseAuth.instance.currentUser?.uid;
   Uint8List? decodedBytes(String base64) {
     if (imageCache.containsKey(base64)) {
       return imageCache[base64];
@@ -103,7 +105,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
               ),
-//<QuerySnapshot> or <DocumentSnapshot> is ka difference 
+              //<QuerySnapshot> or <DocumentSnapshot> is ka difference
               child: StreamBuilder<QuerySnapshot>(
                 stream: categoryStream,
                 builder: (context, snapshot) {
@@ -172,7 +174,7 @@ class _HomeState extends State<Home> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.85,
+                          childAspectRatio: 0.8,
                           mainAxisSpacing: 13.0,
                           crossAxisSpacing: 0.0,
                         ),
@@ -289,10 +291,14 @@ class _HomeState extends State<Home> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                Detailpage(documentId: documentId, productId: productId),
+            builder: (context) => Detailpage(
+              documentId: documentId,
+              productId: productId,
+              price: price,
+            ),
           ),
         );
+        print(price);
 
         print(documentId);
         print(productId);
@@ -370,7 +376,7 @@ class _HomeState extends State<Home> {
                       FaIcon(
                         Icons.favorite_border_rounded,
                         color: Colors.black,
-                        fontWeight: FontWeight.w500, 
+                        fontWeight: FontWeight.w500,
                       ),
                     ],
                   ),

@@ -20,16 +20,37 @@ class _LoginState extends State<Login> {
   Future<void> signin(String email, String password) async {
     UserCredential userCredential;
     if (email == "" || password == "") {
-      print("enter required fields");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF9F0F0F),
+          content: Center(
+            child: Text(
+              "Enter Your email & password",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
     }
     try {
       userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
     } on FirebaseAuthException catch (ex) {
-      print(ex);
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF9F0F0F),
+          content: Text(
+            "$ex",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
     }
   }
 
@@ -146,11 +167,17 @@ class _LoginState extends State<Login> {
                 ],
               ),
               SizedBox(height: 10.h),
-              Text(
-                "_______________________Or with_____________________",
-                style: Fonthelper.mediumTextstyle(
-                  color: Colors.grey,
-                  fontsize: 16.sp,
+              Container(
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    "________________Or with________________",
+                    style: Fonthelper.mediumTextstyle(
+                      color: Colors.grey,
+                      fontsize: 16.sp,
+                    ),
+                    maxLines: 1,
+                  ),
                 ),
               ),
               SizedBox(height: 15.h),

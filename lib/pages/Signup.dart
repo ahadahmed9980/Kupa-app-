@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocerapp/pages/home.dart';
@@ -20,7 +22,17 @@ class _LoginState extends State<Signup> {
     final useremail = email.text.trim();
     final userpassword = password.text.trim();
     if (username.isEmpty || useremail.isEmpty || userpassword.isEmpty) {
-      print("fill all fields");
+          ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF9F0F0F),
+          content: Center(
+            child: Text(
+              "Enter all required fields",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
       return;
     } else {
       try {
@@ -40,9 +52,29 @@ class _LoginState extends State<Signup> {
           context,
           MaterialPageRoute(builder: (context) => Home()),
         );
-        print("user inserted ");
+            ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF9F0F0F),
+          content: Center(
+            child: Text(
+              "Registered successfully",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
       } on FirebaseAuthException catch (ex) {
-        print(ex);
+            ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF9F0F0F),
+          content: Center(
+            child: Text(
+              "$ex",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
       }
     }
   }
@@ -164,7 +196,7 @@ class _LoginState extends State<Signup> {
                 ],
               ),
               //policy and privacy
-              SizedBox(height: 150),
+              SizedBox(height: 150.h),
               Align(
                 alignment: Alignment.center,
                 child: Column(
