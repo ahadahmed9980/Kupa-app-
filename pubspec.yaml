@@ -51,6 +51,9 @@ dependencies:
   http: ^1.6.0
   delightful_toast: ^1.1.0
   flutter_sliding_up_panel: ^2.1.1
+  dio: ^5.9.0
+  riverpod: ^3.0.3
+  flutter_riverpod: ^3.0.3
   
   
 

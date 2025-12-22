@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_stripe/flutter_stripe.dart'; 
 import 'package:grocerapp/pages/splasescreen.dart';
-import 'package:grocerapp/pages/widgetsall/checkuser.dart';
+import 'package:grocerapp/secret/keys.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 1. Firebase Initialize karein
   await Firebase.initializeApp();
-  runApp(const MyApp());
+
+ 
+  Stripe.publishableKey =
+      "pk_test_51Sh9kL3IQK3L8N1sImJBXBOTS2MpivuPc09lQqV6fVq10e6i8d3pETvqNch4k9bWuMsLk5gM8rmP3bq82IvdCuCx00LiTWfkhR"; // Apni key yahan likhein
+  await Stripe.instance.applySettings();
+
+  runApp(
+   
+    const ProviderScope(child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,76 +29,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(411, 914), // reference screen size
-      minTextAdapt: true, // text automatic adapt
-      // splitScreenMode: true, // tablet support
+      designSize: const Size(411, 914),
+      minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'Grocer App',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+            useMaterial3: true,
           ),
-          home: Splasescreen(),
+          home: const Splasescreen(),
         );
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // ScreenUtil ke sath responsive sizes
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          widget.title,
-          style: TextStyle(fontSize: 20.sp), // responsive text
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(fontSize: 16.sp), // responsive text
-            ),
-            SizedBox(height: 10.h), // responsive spacing
-            Text(
-              '$_counter',
-              style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(
-          Icons.add,
-          size: 25.sp, // responsive icon
-        ),
-      ),
     );
   }
 }
