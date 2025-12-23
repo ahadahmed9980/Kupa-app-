@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocerapp/pages/home.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:grocerapp/pages/widgetsall/golbal.dart' as globals;
+
+import 'package:grocerapp/secret/keys.dart';
+import 'package:http/http.dart' as http;
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -17,6 +22,18 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  Map<String, dynamic>? paymentIntent;
+  String? name, id;
+
+  getuserdetails() async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("User")
+        .doc(globals.uid)
+        .get();
+    var name = doc['Name'];
+    var id = doc['uid'];
+  }
+
   final Map<String, Uint8List?> imageCache = {};
   int deliveryCharge = 170;
 
@@ -35,11 +52,42 @@ class _CartState extends State<Cart> {
     }
   }
 
+  //move to order from cartsec
+  Future<void> movecarttoorder() async {
+    try {
+      QuerySnapshot cartsnapshot = await FirebaseFirestore.instance
+          .collection("User")
+          .doc(globals.uid)
+          .collection("Cart")
+          .get();
+          //.map((doc) { ... }): Ye aik loop ki tarah kaam karta hai jo har document ke andar jata hai.
+      List<Map<String, dynamic>> cartItemList = cartsnapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+      if (cartItemList.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection("Orders")
+            .doc(globals.uid)
+            .set({'all items': cartItemList, "order date": DateTime.now()});
+        print("Data successfully moved ");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   final Stream<QuerySnapshot> cartStream = FirebaseFirestore.instance
       .collection("User")
       .doc(globals.uid)
       .collection("Cart")
       .snapshots();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getuserdetails();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +114,7 @@ class _CartState extends State<Cart> {
                 margin: EdgeInsets.only(left: 10.w, top: 50.h, right: 15.w),
                 padding: EdgeInsets.only(bottom: 10.h),
                 decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE9E8E8)),
-                  ),
+                  border: Border(bottom: BorderSide(color: Color(0xFFE9E8E8))),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,21 +141,21 @@ class _CartState extends State<Cart> {
                         ),
                       )
                     : (!snapshot.hasData || snapshot.data!.docs.isEmpty)
-                        ? const Center(child: Text("Your Cart is Empty"))
-                        : ListView.builder(
-                            padding: EdgeInsets.only(top: 10.h),
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              final doc = snapshot.data!.docs[index];
-                              return cartItem(
-                                doc["title"] ?? "No Title",
-                                doc["price"].toString(),
-                                doc["image"] ?? "",
-                                doc["quantity"].toString(),
-                                doc.id,
-                              );
-                            },
-                          ),
+                    ? const Center(child: Text("Your Cart is Empty"))
+                    : ListView.builder(
+                        padding: EdgeInsets.only(top: 10.h),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final doc = snapshot.data!.docs[index];
+                          return cartItem(
+                            doc["title"] ?? "No Title",
+                            doc["price"].toString(),
+                            doc["image"] ?? "",
+                            doc["quantity"].toString(),
+                            doc.id,
+                          );
+                        },
+                      ),
               ),
 
               SizedBox(height: 10.h),
@@ -290,9 +336,98 @@ class _CartState extends State<Cart> {
             ),
           ),
           SizedBox(height: 12.h),
-          Fonthelper.custombutton("Checkout", () {}),
+          Fonthelper.custombutton("Checkout", () {
+            makePayment(total);
+          }),
         ],
       ),
     );
+  }
+
+  //payment sec
+  Future<void> makePayment(String amount) async {
+    try {
+      paymentIntent = await createPaymentIntent(amount, "PKR");
+
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          merchantDisplayName: 'Grocer App',
+          style: ThemeMode.light,
+        ),
+      );
+
+      await displayPaymentSheet();
+    } catch (e) {
+      print("Payment Error: $e");
+    }
+  }
+
+  Future<void> displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        movecarttoorder();
+
+        var snapshot = await FirebaseFirestore.instance
+            .collection("User")
+            .doc(globals.uid)
+            .collection("Cart")
+            .get();
+        for (var doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.check_circle, color: Colors.green, size: 40),
+                SizedBox(height: 10),
+                Text("Payment Successful"),
+              ],
+            ),
+          ),
+        );
+      });
+
+      paymentIntent = null;
+    } on StripeException catch (e) {
+      print("Stripe Error: $e");
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> createPaymentIntent(
+    String amount,
+    String currency,
+  ) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': calculateAmount(amount),
+        'currency': currency,
+        'payment_method_types[]': 'card',
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer $secretkey',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      return jsonDecode(response.body);
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  String calculateAmount(String amount) {
+    final calculatedAmount = int.parse(amount) * 100;
+    return calculatedAmount.toString();
   }
 }
