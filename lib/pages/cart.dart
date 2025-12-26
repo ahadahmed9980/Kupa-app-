@@ -14,6 +14,7 @@ import 'package:grocerapp/pages/widgetsall/golbal.dart' as globals;
 import 'package:grocerapp/secret/keys.dart';
 import 'package:http/http.dart' as http;
 
+
 class Cart extends StatefulWidget {
   const Cart({super.key});
 
@@ -66,9 +67,12 @@ class _CartState extends State<Cart> {
       }).toList();
       if (cartItemList.isNotEmpty) {
         await FirebaseFirestore.instance
-            .collection("Orders")
-            .doc(globals.uid)
-            .set({'all items': cartItemList, "order date": DateTime.now()});
+            .collection("Userorders")
+            .doc(globals.uid).collection("Orders").add({'all items': cartItemList, "order date": DateTime.now(),
+            "statue":"pending",
+            
+            });
+           
         print("Data successfully moved ");
       }
     } catch (e) {
@@ -132,7 +136,6 @@ class _CartState extends State<Cart> {
                 ),
               ),
 
-              // Cart List
               Expanded(
                 child: snapshot.connectionState == ConnectionState.waiting
                     ? const Center(

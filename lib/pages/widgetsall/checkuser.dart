@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:grocerapp/main.dart';
 import 'package:grocerapp/pages/Signup.dart';
@@ -8,13 +10,10 @@ import 'package:grocerapp/pages/login.dart';
 import 'package:grocerapp/pages/splasescreen.dart';
 
 class Checkuser extends StatelessWidget {
-
   const Checkuser({super.key});
-
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {

@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocerapp/pages/detailpage.dart';
+import 'package:grocerapp/pages/widgetsall/custom_navigation.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 
 import 'dart:typed_data';
 
@@ -21,8 +23,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+     final items = <Widget>[
+      Icon(Icons.home, size: 30, color: Colors.white),
+      Icon(Icons.run_circle, size: 30, color: Colors.white),
+      Icon(Icons.person, size: 30, color: Colors.white),
+    ];
+  int selectedindex = 0;
   String track = "0";
-final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uid = FirebaseAuth.instance.currentUser?.uid;
   Uint8List? decodedBytes(String base64) {
     if (imageCache.containsKey(base64)) {
       return imageCache[base64];
@@ -159,11 +167,11 @@ final uid = FirebaseAuth.instance.currentUser?.uid;
                     );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xFF9F0F0F),
-                      ),
-                    );
+                    // return Center(
+                    //   child: CircularProgressIndicator(
+                    //     color: Color(0xFF9F0F0F),
+                    //   ),
+                    // );
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Center(child: Text("No data found"));
@@ -201,9 +209,18 @@ final uid = FirebaseAuth.instance.currentUser?.uid;
                 },
               ),
             ),
+
+           
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        alignment: Alignment.center,
+        // margin: EdgeInsets.only(bottom: 60),
+        height: 65.h,
+        child:CustomNavBar()
+      ),
+      extendBody: true,
     );
   }
 

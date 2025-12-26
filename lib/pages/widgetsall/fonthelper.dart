@@ -253,9 +253,6 @@ class Fonthelper {
     );
   }
 
-
-
-
   static billbars(String text, String bill) {
     return Container(
       padding: EdgeInsets.all(10),
@@ -280,7 +277,7 @@ class Fonthelper {
             text,
             style: Fonthelper.mediumTextstyle(
               fontsize: 17.sp,
-              color:Colors.grey
+              color: Colors.grey,
             ),
           ),
           Text(
@@ -290,6 +287,27 @@ class Fonthelper {
               fontsize: 19.sp,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  static profilecontainer(IconData? icons, String text) {
+    return Container(
+      height: 100,
+      width: 120,
+      padding: EdgeInsets.all(11.w),
+
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey),
+      ),
+      child: Column(
+        children: [
+          FaIcon(icons, size: 40),
+          SizedBox(height: 5.h),
+          Text(text, style: Fonthelper.mediumTextstyle()),
         ],
       ),
     );
