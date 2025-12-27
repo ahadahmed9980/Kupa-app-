@@ -7,6 +7,8 @@ import 'package:grocerapp/pages/login.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:grocerapp/pages/widgetsall/m.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -17,12 +19,13 @@ class Signup extends StatefulWidget {
 }
 
 class _LoginState extends State<Signup> {
+
   Future<void> Signupuser() async {
     final username = name.text.trim();
     final useremail = email.text.trim();
     final userpassword = password.text.trim();
     if (username.isEmpty || useremail.isEmpty || userpassword.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Color(0xFF9F0F0F),
           content: Center(
@@ -50,31 +53,28 @@ class _LoginState extends State<Signup> {
         });
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => MainScreen()),
         );
-            ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Color(0xFF9F0F0F),
-          content: Center(
-            child: Text(
-              "Registered successfully",
-              style: TextStyle(color: Colors.white),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Color(0xFF9F0F0F),
+            content: Center(
+              child: Text(
+                "Registered successfully",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
-        ),
-      );
+        );
       } on FirebaseAuthException catch (ex) {
-            ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Color(0xFF9F0F0F),
-          content: Center(
-            child: Text(
-              "$ex",
-              style: TextStyle(color: Colors.white),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Color(0xFF9F0F0F),
+            content: Center(
+              child: Text("$ex", style: TextStyle(color: Colors.white)),
             ),
           ),
-        ),
-      );
+        );
       }
     }
   }
@@ -165,7 +165,11 @@ class _LoginState extends State<Signup> {
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
-                child: Fonthelper.custombutton("Register", () {
+                child: Fonthelper.custombutton("Register", () async {
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  await pref.setString("name", name.text.trim());
+                  print("================name stored=====================");
                   Signupuser();
                 }),
               ),
@@ -189,7 +193,7 @@ class _LoginState extends State<Signup> {
                       " Login",
                       style: Fonthelper.mediumTextstyle(
                         font: FontWeight.w500,
-                          color: Color(0xFF9F0F0F),
+                        color: Color(0xFF9F0F0F),
                       ),
                     ),
                   ),
@@ -211,7 +215,7 @@ class _LoginState extends State<Signup> {
                     Text(
                       "Terms Privacy & Policy",
                       style: Fonthelper.mediumTextstyle(
-                         color: Color(0xFF9F0F0F),
+                        color: Color(0xFF9F0F0F),
                       ),
                     ),
                   ],

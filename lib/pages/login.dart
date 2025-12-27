@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:grocerapp/pages/Signup.dart';
-import 'package:grocerapp/pages/home.dart';
+
 import 'package:grocerapp/pages/widgetsall/addimage.dart';
 import 'package:grocerapp/pages/widgetsall/fonthelper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocerapp/pages/widgetsall/m.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -39,7 +40,7 @@ class _LoginState extends State<Login> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     } on FirebaseAuthException catch (ex) {
         ScaffoldMessenger.of(context).showSnackBar(

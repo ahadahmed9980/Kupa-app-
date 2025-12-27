@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 
 import 'package:flutter/material.dart';
-import 'package:grocerapp/main.dart';
+
 import 'package:grocerapp/pages/Signup.dart';
-import 'package:grocerapp/pages/home.dart';
-import 'package:grocerapp/pages/login.dart';
-import 'package:grocerapp/pages/splasescreen.dart';
+
+import 'package:grocerapp/pages/widgetsall/m.dart';
+
+
 
 class Checkuser extends StatelessWidget {
   const Checkuser({super.key});
@@ -26,7 +26,7 @@ class Checkuser extends StatelessWidget {
         final user = snapshot.data;
         if (user != null) {
           // User logged in hai
-          return const Home();
+          return const MainScreen();
         } else {
           // User logged out hai
           return const Signup();

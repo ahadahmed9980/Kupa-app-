@@ -45,17 +45,14 @@ class _OrderpageState extends State<Orderpage> {
               border: Border(bottom: BorderSide(color: Color(0xFFE9E8E8))),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.arrow_back),
-                ),
+              
                 Text(
                   "My Orders",
                   style: Fonthelper.mediumTextstyle(fontsize: 23.sp),
                 ),
-                SizedBox(width: 30.w),
+             
               ],
             ),
           ),
@@ -73,7 +70,17 @@ class _OrderpageState extends State<Orderpage> {
                 );
               }
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text("No order yet"));
+                return Center(child: Container(
+                  margin: EdgeInsets.only(top: 40.h),
+                  
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("No order yet",style: Fonthelper.headLineTextsyle(),),
+                      Text("Hungry? Place an order and it'll show here.",style: Fonthelper.mediumTextstyle(),maxLines: 1,overflow: TextOverflow.ellipsis,)
+                    ],
+                  ),
+                ));
               }
               if (snapshot.hasError) {
                 return Center(child: Text("Error: ${snapshot.error}"));

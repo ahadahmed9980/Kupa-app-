@@ -14,7 +14,6 @@ import 'package:grocerapp/pages/widgetsall/golbal.dart' as globals;
 import 'package:grocerapp/secret/keys.dart';
 import 'package:http/http.dart' as http;
 
-
 class Cart extends StatefulWidget {
   const Cart({super.key});
 
@@ -36,9 +35,7 @@ class _CartState extends State<Cart> {
   }
 
   final Map<String, Uint8List?> imageCache = {};
-  int deliveryCharge = 170;
 
-  // Image decoding
   Uint8List? decodedBytes(String base64) {
     if (imageCache.containsKey(base64)) {
       return imageCache[base64];
@@ -53,7 +50,6 @@ class _CartState extends State<Cart> {
     }
   }
 
-  //move to order from cartsec
   Future<void> movecarttoorder() async {
     try {
       QuerySnapshot cartsnapshot = await FirebaseFirestore.instance
@@ -61,18 +57,21 @@ class _CartState extends State<Cart> {
           .doc(globals.uid)
           .collection("Cart")
           .get();
-          //.map((doc) { ... }): Ye aik loop ki tarah kaam karta hai jo har document ke andar jata hai.
+      //.map((doc) { ... }): Ye aik loop ki tarah kaam karta hai jo har document ke andar jata hai.
       List<Map<String, dynamic>> cartItemList = cartsnapshot.docs.map((doc) {
         return doc.data() as Map<String, dynamic>;
       }).toList();
       if (cartItemList.isNotEmpty) {
         await FirebaseFirestore.instance
             .collection("Userorders")
-            .doc(globals.uid).collection("Orders").add({'all items': cartItemList, "order date": DateTime.now(),
-            "statue":"pending",
-            
+            .doc(globals.uid)
+            .collection("Orders")
+            .add({
+              'all items': cartItemList,
+              "order date": DateTime.now(),
+              "statue": "pending",
             });
-           
+
         print("Data successfully moved ");
       }
     } catch (e) {
@@ -93,6 +92,8 @@ class _CartState extends State<Cart> {
     getuserdetails();
   }
 
+  int deliveryCharges = 10;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -105,9 +106,15 @@ class _CartState extends State<Cart> {
             var price = doc['totalprice'] ?? 0;
             subtotal += double.tryParse(price.toString()) ?? 0;
           }
+          //delivery charges logic
+          if (subtotal == 0) {
+            deliveryCharges = 0;
+          } else {
+            deliveryCharges = 170;
+          }
         }
 
-        double finalTotal = subtotal + deliveryCharge;
+        double finalTotal = subtotal + deliveryCharges;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -121,17 +128,12 @@ class _CartState extends State<Cart> {
                   border: Border(bottom: BorderSide(color: Color(0xFFE9E8E8))),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back),
-                    ),
                     Text(
                       "My Cart",
                       style: Fonthelper.mediumTextstyle(fontsize: 23.sp),
                     ),
-                    SizedBox(width: 30.w),
                   ],
                 ),
               ),
@@ -144,7 +146,23 @@ class _CartState extends State<Cart> {
                         ),
                       )
                     : (!snapshot.hasData || snapshot.data!.docs.isEmpty)
-                    ? const Center(child: Text("Your Cart is Empty"))
+                    ? Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.shopping_cart,
+                              size: 35,
+                              color: const Color(0xFF9F0F0F),
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              "Your Cart is Empty",
+                              style: Fonthelper.mediumTextstyle(),
+                            ),
+                          ],
+                        ),
+                      )
                     : ListView.builder(
                         padding: EdgeInsets.only(top: 10.h),
                         itemCount: snapshot.data!.docs.length,
@@ -318,7 +336,7 @@ class _CartState extends State<Cart> {
         children: [
           Fonthelper.billbars("Sub total", sub),
           const SizedBox(height: 6),
-          Fonthelper.billbars("Delivery", deliveryCharge.toString()),
+          Fonthelper.billbars("Delivery", deliveryCharges.toString()),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Row(

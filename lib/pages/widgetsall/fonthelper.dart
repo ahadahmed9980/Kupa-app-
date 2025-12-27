@@ -91,7 +91,7 @@ class Fonthelper {
           controller: controller,
           keyboardType: TextInputType.emailAddress,
           cursorColor: Colors.black,
-          cursorWidth: 2,
+          cursorWidth: 1.5,
           cursorHeight: 30,
           style: Fonthelper.mediumTextstyle(font: FontWeight.w800),
           decoration: InputDecoration(
@@ -147,7 +147,7 @@ class Fonthelper {
             ),
             child: TextField(
               cursorColor: Colors.black,
-              cursorWidth: 2,
+              cursorWidth: 1.5,
               cursorHeight: 20,
 
               style: Fonthelper.mediumTextstyle(font: FontWeight.w700),
@@ -235,7 +235,7 @@ class Fonthelper {
     return DelightToastBar(
       builder: (context) {
         return ToastCard(
-          leading: FaIcon(icons, size: 30, color: const Color(0xFF9F0F0F)),
+          leading: FaIcon(icons, size: 30.sp, color: const Color(0xFF9F0F0F)),
           title: Text(
             "$text",
             style: TextStyle(
@@ -255,9 +255,9 @@ class Fonthelper {
 
   static billbars(String text, String bill) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10.w),
       width: double.infinity,
-      height: 50,
+      height: 50.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.r),
@@ -294,20 +294,51 @@ class Fonthelper {
 
   static profilecontainer(IconData? icons, String text) {
     return Container(
-      height: 100,
-      width: 120,
+      height: 100.h,
+      width: 120.w,
       padding: EdgeInsets.all(11.w),
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
         border: Border.all(color: Colors.grey),
       ),
       child: Column(
         children: [
-          FaIcon(icons, size: 40),
+          FaIcon(icons, size: 40.sp),
           SizedBox(height: 5.h),
           Text(text, style: Fonthelper.mediumTextstyle()),
+        ],
+      ),
+    );
+  }
+
+  static profilebars(IconData icons, String text, Color? color) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
+
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          FaIcon(
+          icons,
+            color: color,
+            size: 32.sp,
+          ),
+
+          Text(text, style: Fonthelper.mediumTextstyle()),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Text(""),
+          Icon(Icons.arrow_forward_ios,size: 20.sp,),
         ],
       ),
     );
